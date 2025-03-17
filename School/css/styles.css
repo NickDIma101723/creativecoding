@@ -2,3 +2,105 @@
 body {
     font-family: 'Kosugi Maru', sans-serif;
 }
+
+
+.perspective-container {
+    perspective: 1000px;
+}
+
+.card-3d {
+    transition: transform 0.5s;
+    transform-style: preserve-3d;
+}
+
+.card-3d:hover {
+    transform: rotateY(10deg) rotateX(10deg);
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #FEFAF2;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #F4A261;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #e67e22;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.parallax {
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes bounceFade{
+    0%{
+        opacity: 0;
+        transform: translateY(0);
+    }
+    50%{
+        opacity: 1;
+        transform: translateY(-20px);
+    }
+    100%{
+        opacity: 0;
+        transform: translateY(0);
+    }
+}
+  
+
+.arrow{
+    position: absolute;
+    top: 80%;
+    left: 44%;
+    animation: bounceFade 2s infinite;
+}
+
+ /* When the mobile menu is toggled (visible), change the background */
+ #menu.open {
+    background-color: #f8f8f8; /* Light background color for mobile menu */
+    height: 100vh; /* Full screen height for the mobile menu */
+    position: absolute; /* Position it fixed so it overlays on top */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Close button styles */
+  .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 30px;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+
+  .close-btn:hover {
+    color: #ff5e00; 
+  }
+
+  .close-btn {
+    display: block;
+  }
+
+  @media (min-width: 768px) {
+    .close-btn {
+      display: none; 
+    }
+  }
