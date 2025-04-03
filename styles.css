@@ -1,0 +1,13 @@
+@keyframes wiggle {
+    0%, 100% {
+        transform: rotate(-5deg);
+    }
+    50% {
+        transform: rotate(3deg);
+    }
+}
+
+.animate-wiggle:hover {
+    animation: wiggle 1s ease-in-out infinite;    
+}
+

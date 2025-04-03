@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fidget</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="h-screen">
+    <div class="grid grid-cols-2 grid-rows-2 h-full">
+        <div class="bg-[#E63946]"></div>
+        <div class="bg-[#457B9D] flex justify-center items-center p-5 ">
+            <img class="w-[350px] h-[400px] animate-wiggle" src="image/rose.svg" alt="">
+        </div>
+        <div class="bg-[#8338EC] flex justify-center items-center p-5">
+            <img src="image/Group 2.svg" alt="" class="absolute w-[200px] h-[200px] z-0 bottom-[250px]">
+            <div class="bg-gradient-to-t from-[#1D3557] to-[#FB5607] w-[300px] h-[300px] opacity-95 z-10 mt-12 rounded-2xl relative flex flex-col items-center justify-between py-4">
+                <audio id="musicPlayer" class="hidden">
+                  <source id="audioSource" src="" type="audio/mp3">
+                  Your browser does not support the audio element.
+                </audio>
+                <!-- Lyrics Display -->
+                <div id="lyricsContainer" class="w-[260px] h-[120px] overflow-y-auto text-white text-sm text-center flex flex-col gap-2">
+                  <!-- Lyrics will be dynamically inserted here -->
+                </div>
+                <!-- Player Controls -->
+                <div class="w-[260px] flex flex-col items-center gap-2">
+                  <!-- Song Title -->
+                  <span id="songTitle" class="text-white text-sm font-bold truncate w-full text-center"></span>
+                  <!-- Time Display -->
+                  <div class="w-full flex justify-between text-white text-sm">
+                    <span id="currentTime">0:00</span>
+                    <span id="duration">0:00</span>
+                  </div>
+                  <!-- Progress Bar -->
+                  <input 
+                    type="range" 
+                    id="progressBar" 
+                    value="0" 
+                    max="100" 
+                    class="w-full h-2 bg-white/20 rounded-full appearance-none cursor-pointer accent-[#FB5607]"
+                  >
+                  <!-- Controls -->
+                  <div class="flex justify-between w-full">
+                    <button id="backwardBtn" class="bg-white/20 text-white font-bold py-2 px-4 rounded-lg hover:bg-white/30 transition duration-300">
+                      ⏪
+                    </button>
+                    <button id="playPauseBtn" class="bg-white/20 text-white font-bold py-2 px-6 rounded-lg hover:bg-white/30 transition duration-300">
+                      Play
+                    </button>
+                    <button id="forwardBtn" class="bg-white/20 text-white font-bold py-2 px-4 rounded-lg hover:bg-white/30 transition duration-300">
+                      ⏩
+                    </button>
+                  </div>
+                  <!-- Next/Previous Song Buttons -->
+                  <div class="flex justify-between w-full mt-2">
+                    <button id="prevSongBtn" class="bg-white/20 text-white font-bold py-1 px-3 rounded-lg hover:bg-white/30 transition duration-300">
+                      Prev
+                    </button>
+                    <button id="nextSongBtn" class="bg-white/20 text-white font-bold py-1 px-3 rounded-lg hover:bg-white/30 transition duration-300">
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <script src="https://cdn.tailwindcss.com"></script>
+              <script>
+                const audio = document.getElementById('musicPlayer');
+                const audioSource = document.getElementById('audioSource');
+                const playPauseBtn = document.getElementById('playPauseBtn');
+                const forwardBtn = document.getElementById('forwardBtn');
+                const backwardBtn = document.getElementById('backwardBtn');
+                const prevSongBtn = document.getElementById('prevSongBtn');
+                const nextSongBtn = document.getElementById('nextSongBtn');
+                const progressBar = document.getElementById('progressBar');
+                const currentTimeDisplay = document.getElementById('currentTime');
+                const durationDisplay = document.getElementById('duration');
+                const songTitle = document.getElementById('songTitle');
+                const lyricsContainer = document.getElementById('lyricsContainer');
+              
+                // Playlist with timestamped lyrics (simplified LRC-style)
+                const playlist = [
+                  { 
+                    title: "Tyler, The Creator - SEE YOU AGAIN (ft. Kali Uchis)", 
+                    url: "Tyler, The Creator - SEE YOU AGAIN (ft. Kali Uchis) [NmvVhovjJI0].mp3",
+                    lyrics: [
+                      { time: 0, text: "Okay, okay, okay, okay" },
+                      { time: 5, text: "Okay, okay, I see you again" },
+                      { time: 10, text: "Dreamin', dreamin', dreamin', dreamin'" },
+                      { time: 15, text: "Dreamin', dreamin', I see you again" }
+                    ]
+                  },
+                  { 
+                    title: "Civ - 1 AM", 
+                    url: "Civ - 1 AM (Lyrics) pop out at 1 in the mornin' [Hl_OrpdBWLw].mp3",
+                    lyrics: [
+                      { time: 0, text: "Pop out at 1 in the mornin'" },
+                      { time: 5, text: "I’m feelin' alive in the dark" },
+                      { time: 10, text: "Lights low, I’m movin' in silence" },
+                      { time: 15, text: "No sleep, just vibes in my heart" }
+                    ]
+                  },
+                  { 
+                    title: "Post Malone, Swae Lee - Sunflower", 
+                    url: "Post Malone, Swae Lee - Sunflower (Spider-Man_ Into the Spider-Verse) (Official Video).mp3",
+                    lyrics: [
+                      { time: 0, text: "Ayy, ayy, ayy, ayy" },
+                      { time: 5, text: "Needless to say, I keep her in check" },
+                      { time: 10, text: "She was a bad-bad, nevertheless" },
+                      { time: 15, text: "Callin' it quits now, baby, I’m a wreck" }
+                    ]
+                  }
+                ];
+                let currentSongIndex = 0;
+              
+                // Load a song and its lyrics
+                function loadSong(index) {
+                  audioSource.src = playlist[index].url;
+                  songTitle.textContent = playlist[index].title;
+                  audio.load();
+                  progressBar.value = 0;
+                  currentTimeDisplay.textContent = "0:00";
+                  playPauseBtn.textContent = "Play";
+              
+                  // Clear and populate lyrics
+                  lyricsContainer.innerHTML = '';
+                  playlist[index].lyrics.forEach(line => {
+                    const p = document.createElement('p');
+                    p.textContent = line.text;
+                    p.dataset.time = line.time;
+                    p.classList.add('opacity-50', 'transition', 'duration-300');
+                    lyricsContainer.appendChild(p);
+                  });
+                }
+              
+                // Format time in minutes:seconds
+                function formatTime(seconds) {
+                  const minutes = Math.floor(seconds / 60);
+                  const secs = Math.floor(seconds % 60);
+                  return `${minutes}:${secs < 10 ? '0' + secs : secs}`;
+                }
+              
+                // Update lyrics display based on current time
+                function updateLyrics() {
+                  const currentTime = audio.currentTime;
+                  const lyrics = playlist[currentSongIndex].lyrics;
+                  const lines = lyricsContainer.querySelectorAll('p');
+              
+                  lines.forEach((line, index) => {
+                    const lineTime = parseFloat(line.dataset.time);
+                    const nextTime = index < lyrics.length - 1 ? lyrics[index + 1].time : audio.duration;
+              
+                    if (currentTime >= lineTime && currentTime < nextTime) {
+                      line.classList.remove('opacity-50');
+                      line.classList.add('opacity-100', 'font-bold');
+                      // Auto-scroll to current line
+                      line.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    } else {
+                      line.classList.remove('opacity-100', 'font-bold');
+                      line.classList.add('opacity-50');
+                    }
+                  });
+                }
+              
+                // Initial load
+                loadSong(currentSongIndex);
+              
+                // Set duration once audio is loaded
+                audio.addEventListener('loadedmetadata', () => {
+                  durationDisplay.textContent = formatTime(audio.duration);
+                  progressBar.max = audio.duration;
+                });
+              
+                // Play/Pause Toggle
+                playPauseBtn.addEventListener('click', () => {
+                  if (audio.paused) {
+                    audio.play();
+                    playPauseBtn.textContent = 'Pause';
+                  } else {
+                    audio.pause();
+                    playPauseBtn.textContent = 'Play';
+                  }
+                });
+              
+                // Forward 10 seconds
+                forwardBtn.addEventListener('click', () => {
+                  audio.currentTime = Math.min(audio.currentTime + 10, audio.duration);
+                });
+              
+                // Backward 10 seconds
+                backwardBtn.addEventListener('click', () => {
+                  audio.currentTime = Math.max(audio.currentTime - 10, 0);
+                });
+              
+                // Previous Song
+                prevSongBtn.addEventListener('click', () => {
+                  currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
+                  loadSong(currentSongIndex);
+                  audio.play();
+                  playPauseBtn.textContent = 'Pause';
+                });
+              
+                // Next Song
+                nextSongBtn.addEventListener('click', () => {
+                  currentSongIndex = (currentSongIndex + 1) % playlist.length;
+                  loadSong(currentSongIndex);
+                  audio.play();
+                  playPauseBtn.textContent = 'Pause';
+                });
+              
+                // Auto-play next song when current one ends
+                audio.addEventListener('ended', () => {
+                  nextSongBtn.click();
+                });
+              
+                // Update progress bar, time, and lyrics
+                audio.addEventListener('timeupdate', () => {
+                  progressBar.value = audio.currentTime;
+                  currentTimeDisplay.textContent = formatTime(audio.currentTime);
+                  updateLyrics();
+                });
+              
+                // Seek when progress bar is adjusted
+                progressBar.addEventListener('input', () => {
+                  audio.currentTime = progressBar.value;
+                  currentTimeDisplay.textContent = formatTime(audio.currentTime);
+                  updateLyrics();
+                });
+              </script>
+        </div>
+        <div class="bg-[#F48C06]"></div>
+    </div>
+</body>
+</html>
