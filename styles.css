@@ -11,3 +11,29 @@
     animation: wiggle 1s ease-in-out infinite;    
 }
 
+#lyricsContainer {
+    max-height: 400px;
+    padding: 1rem;
+    background-color: #121212;
+    color: #b3b3b3; 
+    overflow-y: scroll; 
+    -ms-overflow-style: none; 
+    scrollbar-width: none;
+  }
+  
+  #lyricsContainer::-webkit-scrollbar {
+    display: none; 
+  }
+  
+  #lyricsContainer p {
+    line-height: 1.5;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .spin-custom:hover {
+    animation: spin 1s ease-in-out infinite;
+  }
