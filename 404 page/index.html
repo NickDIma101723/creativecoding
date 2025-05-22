@@ -4,30 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 page</title>
-      <script src="https://cdn.tailwindcss.com"></script>
-      <link rel="stylesheet" href="./css/styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./js/script.js"defer></script>
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inria+Serif&display=swap" rel="stylesheet">
 </head>
-<body class="h-screen w-full flex items-center justify-center">
-    <nav class="fixed w-full top-0 left-0 bottom-0" >
-<div class="flex justify-end items-center p-5 px-5 ">
-    <ul class="flex flex-row pt-1 gap-5 text-lg font-bold">
-        <li class="mx-2">
-            <a href="index.html" class="text-black">Home</a>
-        </li>
-        <li class="mx-2">
-            <a href="about.html" class="text-black">Categories</a>
-        </li>
-        <li class="mx-2">
-            <a href="contact.html" class="text-black">Contact</a>
-        </li>
-        <li class="mx-2">
-            <a href="services.html" class="text-black">Sign in</a>
-        </li>
-    </ul>
-</div>
+<body class="h-screen w-full flex items-center justify-center overflow-hidden bg-black">
+    <div class="loading-line-container" id="loading-container">
+        <div class="loading-line" id="loading-line"></div>
+    </div>
+    <nav class="fixed w-full top-0 left-0">
+        <div class="flex justify-end items-center p-5 px-5">
+            <ul class="flex flex-row pt-1 gap-5 text-lg font-semibold">
+              
+                <li class="mx-2">
+                    <a href="about.html" class="text-white nav-link categories">Categories</a>
+                </li>
+                <li class="mx-2">
+                    <a href="contact.html" class="text-white nav-link contact">Contact</a>
+                </li>
+                <li class="mx-2">
+                    <a href="services.html" class="text-white nav-link signin">Sign in</a>
+                </li>
+            </ul>
+        </div>
     </nav>
-    <div class="flex flex-col">
-        <h1>THIS PAGE DOESN'T EXIST ANYMORE</h1>
+    <div class="flex flex-col items-center justify-center w-full overflow-hidden">
+        <p class="text-sm text-white -mb-22 tracking-wider message-text" id="message" style="font-family: 'Inria Serif', serif;">THIS PAGE DOESN'T EXIST ANYMORE</p>
+        <h1 class="error-code" id="error-code" style="font-family: 'Inria Serif', serif;">401</h1>
+        <button class="back-button" id="back-button">
+            <span class="side-border-left"></span>
+            <span class="side-border-right"></span>
+            <span class="top-border"></span>
+            BACK HOME
+        </button>
     </div>
 </body>
 </html>
